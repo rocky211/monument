@@ -39,7 +39,16 @@ const Promise = require('bluebird')
 	  		});
 	  })
 	  .filter((file) => {
-	  		return file.indexOf('node_modules') === -1;
+	  	//ignore all node_module files and  todo.js
+	  		if(file.indexOf('node_modules') !== -1) {
+	  			return false;
+	  		}
+	  		else if(file.indexOf('todo.js') !== -1) {
+	  			return false;
+	  		}
+	  		else {
+	  			return true;
+	  		}
 	  })
 	  .then((files) => {
 	  	return Promise.all(files.map(checkToDo));
