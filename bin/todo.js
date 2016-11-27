@@ -1,7 +1,7 @@
 'use strict';
 
 const Promise = require('bluebird')
-	, fs = Promise.promisifyAll(require('fs'))
+	, fs = Promise.promisifyAll(require('graceful-fs'))
 	, path = require('path')
 	, glob = require('glob')
 	, async = require('async')
@@ -9,13 +9,13 @@ const Promise = require('bluebird')
 	  	return new Promise((resolve, reject) => {
 	  		fs.readFile(path.resolve(process.cwd()+'/'+file), (err, content) => {
 	  			if(err) {
-	  				reject(err);
+	  				reject('While reading:'+file);
 	  			}
 	  			else {
 	  				let lines = content.toString().split('\n');
 	  				
 	  				let temp = lines.filter((line) => {
-	  					return line.indexOf('TODO') > -1;
+	  					return line.indexOf('TODO:') > -1;
 	  				});
 	  				
 	  				resolve(temp);
@@ -47,7 +47,15 @@ const Promise = require('bluebird')
 	  .filter((file) => {
 	  	return file.length > 0;
 	  })
-	  .then((files) => {console.log(files)})
+	  .reduce((a,b) => a.concat(b))	 //flatten values
+	  .map((file) => file.trim())	//trim values
+	  .then((files) => {
+	  	//filter duplicate values from the array
+	  	return files.filter((file,index,files) => {
+	  		return files.indexOf(file) === index;
+	  	});
+	  })
+	  .then((data) => console.log(data))
 	  .catch((err) => {
-	  	console.log('Err: '+err);
+	  	console.log(err);
 	  })

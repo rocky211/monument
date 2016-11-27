@@ -61,6 +61,7 @@
     "coveralls": "~2.11.11",
     "eslint": "~3.8.1",
     "form-data": "~2.1.1",
+    "graceful-fs": "^4.1.11",
     "http2": "~3.3.2",
     "husky": "^0.11.9",
     "istanbul": "~0.4.4",
